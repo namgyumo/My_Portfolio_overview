@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Gyumo`s portfolio overview
+    </title>
+  </head>
+  <body>
+    <h1 align="center">⚡ NamGyumo's Core Projects Overview ⚡</h1>
+<h3 align="center">C++ Game Developer | Algorithm Enthusiast | Low-level Programmer</h3>
+
+<hr>
+
+<!-- RPG PROJECT -->
+<h2 align="center">🎮 RPG Project 25.08</h2>
+<p align="center"><i>C++ 클래스와 스마트 포인터로 설계한 전투형 RPG 시스템</i></p>
+
+<ul>
+  <li>🧱 <b>클래스 구조:</b> Player, Monster, Skill, BattleManager</li>
+  <li>🧠 <b>스마트 포인터 활용:</b> 메모리 관리 자동화(shared_ptr, unique_ptr)</li>
+  <li>🌍 <b>맵 구조:</b> Linked List로 구성된 사각형 격자 그래프</li>
+  <li>⚙️ <b>전투 루프:</b> 실시간 공격, 상태 이상(버프/디버프), HP 시스템 구현</li>
+</ul>
+
+<pre>
+<code class="language-cpp">
+// 전투 루프 예시
+class Battle {
+public:
+	void battle_line(Character* character, Map::Map_node* map, bool char_first) {
+		Monster* monster = map->monster;
+		if (!monster || !monster->get_live()) {
+			std::cout << "이 칸에는 몬스터가 없습니다.\n";
+			return;
+		}
+
+		int char_def_p = ((character->get_defence_init() / (character->get_defence_init() + 43333.0) * 65 + 5)
+			+ (65 * (1 + pow(-2.71828182846, (-character->get_defence_init() / 93800.0))) + 5)) * 5000;
+
+		int mon_def_p = ((monster->get_defence_init() / (monster->get_defence_init() + 43333.0) * 50 + 5)
+			+ (50 * (1 + pow(-2.71828182846, (-monster->get_defence_init() / 93800.0))) + 5)) * 5000;
+
+		bool turn = char_first;
+
+		while (character->get_live() && monster->get_live()) {
+			if (turn) {
+				if (random(0, 10000) > mon_def_p) {
+					monster->set_hp(monster->get_hp() - character->get_damage_init());
+				}
+				if (monster->get_hp() <= 0) {
+					monster->set_live(false);
+					monster->set_hp(0);
+					std::cout << monster->get_name() << " 격파!\n";
+					// 경험치 지급
+					Level_Manager lm;
+					lm.add_exp(character, monster->get_exp_pd());
+					lm.lvup(character);
+					std::cout << "경험치 " << monster->get_exp_pd() << " 획득!\n";
+					return;
+				}
+			}
+			else {
+				if (random(0, 10000) > char_def_p) {
+					character->set_hp(character->get_hp() - monster->get_damage_init());
+				}
+				if (character->get_hp() <= 0) {
+					character->set_live(false);
+					character->set_hp(0);
+					std::cout << character->get_name() << " 쓰러짐...\n";
+					return;
+				}
+			}
+			turn = !turn; // 턴 교대
+		}
+	}
+
+}
+</code>
+</pre>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" width="40" height="40"/>
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/git/git-original.svg" width="40" height="40"/>
+</p>
+
+<p align="center">
+  <b>Tags:</b> C++, GameDev, OOP, SmartPointer, RPG, LinkedList, Graph
+</p>
+
+<hr>
+
+<!-- BACKJOON -->
+<h2 align="center">🧮 Baekjoon Algorithm Solutions</h2>
+<p align="center"><i>C언어로 실버 등급 문제를 해결하며 논리적 사고력과 최적화 능력 향상</i></p>
+
+<ul>
+  <li>📘 <b>사용 언어:</b> C</li>
+  <li>📊 <b>난이도:</b> 실버 레벨 문제 중심 (DFS, 정렬, 탐색, 트리, 그래프)</li>
+  <li>🔍 <b>학습 포인트:</b> 포인터,동적할다, 구조체, 시간 복잡도 계산</li>
+</ul>
+
+<pre>
+<code class="language-c">
+#include &lt;stdio.h&gt;
+
+int main() {
+    int n, arr[1000];
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++) scanf("%d", &arr[i]);
+    
+    // 힙정렬 
+  void heapify(Books arr[], int arr_size, int i,int islast) {
+	int largest = i;
+	int left = i * 2 + 1;
+	int right = i * 2 + 2;
+
+	if (islast) {
+		if (left < arr_size && isBestseller(arr[largest], arr[left])) {
+			largest = left;
+		}
+		if (right < arr_size && isBestseller(arr[largest], arr[right])) {
+			largest = right;
+		}
+	}
+	else {
+		if (left < arr_size && isnamesort(arr[largest], arr[left])) {
+			largest = left;
+		}
+		if (right < arr_size && isnamesort(arr[largest], arr[right])) {
+			largest = right;
+		}
+	}
+	if (largest != i) {
+		Books temp = arr[largest];
+		arr[largest] = arr[i];
+		arr[i] = temp;
+		heapify(arr, arr_size, largest,islast);
+	}
+}
+
+void heapsort(Books arr[], int arr_size,int islast) {
+	for (int i = arr_size / 2 - 1; i >= 0; i--) {
+		heapify(arr, arr_size, i,islast);
+	}
+	for (int i = arr_size - 1; i > 0; i--) {
+		Books temp = arr[0];
+		arr[0] = arr[i];
+		arr[i] = temp;
+		heapify(arr, i, 0,islast);
+	}
+}
+</code>
+</pre>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-original.svg" width="40" height="40"/>
+</p>
+
+<p align="center">
+  <b>Tags:</b> C, Algorithm, Baekjoon, Sorting, DFS, BFS, ProblemSolving
+</p>
+
+<hr>
+
+<!-- DATA STRUCTURE -->
+<h2 align="center">🧱 Data Structure Practice</h2>
+<p align="center"><i>C언어로 직접 구현한 자료구조 (LinkedList, BST, Heap, Merge Sort, Graph)</i></p>
+
+<ul>
+  <li>🔗 <b>Linked List</b> – 노드 연결 기반 삽입, 삭제, 탐색</li>
+  <li>🌲 <b>Binary Search Tree</b> – 재귀 기반 삽입 및 순회</li>
+  <li>🧮 <b>Heap Sort / Merge Sort</b> – 정렬 알고리즘 직접 구현</li>
+</ul>
+
+<pre>
+<code class="language-c">
+//링크드 리스트 기반 이진 탐색 
+typedef struct BST {
+	long long data;
+	long long count;
+	struct BST* left;
+	struct BST* right;
+}BST;
+
+BST* make_BST(long long data) {
+	BST* node = (BST*)malloc(sizeof(BST));
+	node->data = data;
+	node->count = 1;
+	node->left = NULL;
+	node->right = NULL;
+	return node;
+}
+
+void insert_node(long long data, BST** head) {
+	if ((*head) == NULL) {
+		*head = make_BST(data);
+		return;
+	}
+	BST* temp = *head;
+	BST* last = NULL;
+	while (temp) {
+		last = temp;
+		if (temp->data > data) {
+			temp = temp->left;
+		}
+		else if (temp->data < data) {
+			temp = temp->right;
+		}
+		else {
+			temp->count++;
+			return;
+		}
+	}
+	BST* insert = make_BST(data);
+	if (last->data > data) {
+		last->left = insert;
+	}
+	else {
+		last->right = insert;
+	}
+}
+</code>
+</pre>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-original.svg" width="40" height="40"/>
+</p>
+
+<p align="center">
+  <b>Tags:</b> C, DataStructure, LinkedList, BST, HeapSort, MergeSort
+</p>
+
+<hr>
+
+<!-- SUMMARY -->
+<h2 align="center">📘 Summary</h2>
+<table align="center" border="1" cellpadding="10">
+  <tr>
+    <th>Repository</th>
+    <th>Description</th>
+    <th>Main Language</th>
+  </tr>
+  <tr>
+    <td><b>RPG-project-25.08</b></td>
+    <td>전투형 RPG 시스템 (C++ 클래스, 스마트 포인터, 그래프 기반 맵)</td>
+    <td align="center">C++</td>
+  </tr>
+  <tr>
+    <td><b>Backjoon</b></td>
+    <td>백준 실버 문제풀이 (C언어, DFS/BFS, 정렬)</td>
+    <td align="center">C</td>
+  </tr>
+  <tr>
+    <td><b>Data-structure-practice</b></td>
+    <td>C언어 자료구조 직접 구현 (LinkedList, BST, Heap, Merge Sort)</td>
+    <td align="center">C</td>
+  </tr>
+</table>
+
+<p align="center">
+  <i>Each repository demonstrates logical design, algorithmic clarity, and memory-level control — key traits of a future Game Engine Developer.</i>
+</p>
+
+<hr>
+
+<h4 align="center">🚀 Created by Nam-Gyumo (남삣삐) | C++ Game Engine Developer in Progress</h4>
+  </body>
+</html>
+
+  
